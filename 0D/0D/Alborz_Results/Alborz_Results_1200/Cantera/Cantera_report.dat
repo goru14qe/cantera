@@ -1,0 +1,12 @@
+Name of CANTERA library : /mnt/d/2_Cantera/alborz/build//TEST/0D/BFER_methane.yaml, CH4_BFER_mix, mixture-averaged
+index                         Species                       Mk[kg/mol]                    
+0                             O2                            0.031998                      
+1                             H2O                           0.018015                      
+2                             CH4                           0.016043                      
+3                             CO                            0.02801                       
+4                             CO2                           0.044009                      
+5                             N2                            0.028014                      
+List of reactions
+index                                             Reactions                                         
+0                                                 CH4 + 1.5 O2 => CO + 2 H2O                        
+1                                                 CO + 0.5 O2 <=> CO2                               

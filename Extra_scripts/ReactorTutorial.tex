@@ -1,0 +1,207 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage{verbatim}
+\usepackage{alltt}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+
+% Title Page
+\title{
+    \begin{minipage}\linewidth
+        \centering\bfseries\sffamily
+        Cantera Tutorial
+        \vskip10pt
+        \large 0-D simulations of adiabatic reactors
+    \end{minipage}
+}
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction - Objectives}
+\bigskip
+
+The aim of this tutorial is to walk non-experienced CANTERA users through the computation of 0-D adiabatic reactors simulations. It will provide the temporal evolution of the properties of the mixture inside different types of reactors. \\
+
+Like in the other tutorials, we will work with the detailed methane-air GRIMech 3.0 mechanism, and we will perform both constant pressure (HP) and constant volume simulations (UV).
+
+\section{Steps}
+\bigskip
+
+\subsection{Load the CANTERA module}
+A pre-compiled version of CANTERA will be used for this tutorial. This will enable you to run your CANTERA scripts very easily, no matter the type of environment you use. Open a terminal and simply type: 
+\begin{verbatim}
+module load cantera
+\end{verbatim}
+\\
+
+\subsection{Get the script and mechanism}
+ \begin{itemize}
+  \item  The script can be downloaded here : \url{http://www.cerfacs.fr/cantera/docs/scripts/reactor/Reactors.py}
+  \item  And the .cti file here : \url{http://cerfacs.fr/cantera/docs/mechanisms/methane-air/DETAILED/CANTERA/gri30.cti}
+  \item  They should be placed in a CANTERA sub-directory of your choice.
+ \end{itemize}
+\bigskip
+
+As for the other tutorials, Methane 'CH4' is the fuel species. Other detailed mechanism than the GRIMech 3.0 could have been used, such as those presented on the website : \url{http://www.cerfacs.fr/cantera/mechanisms/meth.php}.
+
+\subsection{Launch your computation}
+Now, on the terminal where you loaded your module, go into your CANTERA sub-directory and type: 
+\begin{verbatim}
+python Reactors.py 
+\end{verbatim}
+\\
+
+This script is automated, so most of the modifications of the general parameters (temperature, pressure, ...) can be done directly in the terminal. You will have to type the values of properties asked on screen. For this exemple, the calculation was performed with the following settings : 
+\bigskip
+
+\begin{center}
+\textbf{Thermodynamic Properties :} \\
+\begin{tabular}{ c c }
+  \hline 
+  \hline
+  Stoichiometric ratio & 1 \\
+  Initial Temperature & 1000 K \\
+  Initial Pressure & 1 bar \\ 
+  Condition & HP \\
+  \hline 
+  \hline
+\end{tabular}
+\end{center}
+\bigskip
+
+The constant enthalpy and pressure reactor is chosen by typing \textbf{HP} in the terminal. \\
+
+Next, set the computational properties : 
+\bigskip 
+
+\begin{center}
+\textbf{Computational Properties :} \\
+\begin{tabular}{ c c }
+  \hline 
+  \hline
+  Number of time steps & 1000 \\
+  Time step & 1ms \\
+  \hline 
+  \hline
+\end{tabular}
+\end{center}
+\bigskip
+
+It is important to run the simulation for a time that is long enough for the mixture to ignite. Also, you want your time steps to be small enough for the continuation to run properly, and to catch the ignition time more accurately. Note that the inital time is also important, and should be adapted to specific simulations.\\
+
+If all is properly set up, the program will return the evolution of some of the mixture's thermodynamic properties with time : 
+
+\begin{verbatim}
+time [s] ,   T [K] ,   p [Pa] ,   u [J/kg]
+ 4.010e-01   1003.912 101325.000   5.919182e+05
+ 4.020e-01   1003.917 101325.000   5.919182e+05
+ 4.030e-01   1003.922 101325.000   5.919182e+05
+ 4.040e-01   1003.926 101325.000   5.919182e+05
+ 4.050e-01   1003.931 101325.000   5.919182e+05
+ 4.060e-01   1003.936 101325.000   5.919182e+05
+[...]
+ 1.043e+00   1316.091 101325.000   5.919184e+05
+ 1.044e+00   2525.055 101325.000   5.919182e+05
+ 1.045e+00   2551.152 101325.000   5.919181e+05
+ 1.046e+00   2550.658 101325.000   5.919181e+05
+ 1.047e+00   2549.675 101325.000   5.919181e+05
+ 1.048e+00   2548.771 101325.000   5.919181e+05
+[...]
+ 1.399e+00   2542.375 101325.000   5.919181e+05
+ 1.400e+00   2542.375 101325.000   5.919181e+05
+output written to Reactor_HP.csv
+To view a plot of these results, run this script with the option -plot
+\end{verbatim}
+\bigskip
+
+\subsection{Saving files}
+Eventually, the data are written in a \textbf{.csv} output file that can be imported into Excel.\\
+
+\newpage
+
+\subsection{The plot option}
+As the output from the previous simulation suggests, there is also a plotting option in this script : if Matplotlib is properly installed on your operating system (help to install it on MacOS can be found here : \url{http://avbpedia.cerfacs.fr/uploads/Other/Tutorial_MacOS.pdf}), you can plot the results by running the script with the option \textbf{-plot} as follows : 
+\begin{verbatim}
+python Reactors.py -plot
+\end{verbatim}
+\bigskip
+
+This should produce a graph composed of 4 plots: Temperature, OH, H and H$_2$. Of course, you can modify the properties you whish to plot by opening the script in your favorite text editor (vi, gedit, emacs, ...) and modifying the last part, under :
+
+\begin{alltt}
+\textcolor{blue}{#################################################################
+# Plot your results
+#################################################################}
+\end{alltt}
+\bigskip
+
+
+\section{Several modifications}
+\bigskip
+
+\subsection{Try another mechanism}
+\bigskip
+
+If you would like to change the mechanism used, you will need to get the \textbf{.cti} file and copy it in your working CANTERA sub-directory. Then you will need to alter your script : \\
+
+In a text editor, modify the two following lines of the file \textbf{reactor\_HP\_UV.py} : \\   
+
+\begin{alltt}
+\textcolor{blue}{#Mechanism used for the process}
+cti = Solution(\textcolor{magenta}{'gri30.cti'})
+
+\textcolor{blue}{#Gaseous fuel species}
+fuel_species = \textcolor{magenta}{'CH4'}
+\end{alltt}
+\bigskip
+
+For example, if you decided to use the 2S\_KERO\_BFER.cti mechanism, you would need to write : \\
+
+\begin{alltt}
+\textcolor{blue}{#Mechanism used for the process}
+cti = Solution(\textcolor{magenta}{'2S\_KERO\_BFER.cti'})
+
+\textcolor{blue}{#Gaseous fuel species}
+fuel_species = \textcolor{magenta}{'KERO'}
+\end{alltt}
+\bigskip
+
+
+\subsection{Change ploted properties}
+\bigskip
+
+To change the properties ploted, open the file \textbf{Reactors.py} in a text editor and modify this : 
+\newpage
+\begin{alltt}
+        from matplotlib.pylab import *
+        clf
+        subplot(2,2,1)
+        plot(tim,\textcolor{red}{temp[:]})
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'Temperature (K)'});
+        subplot(2,2,2)
+        plot(tim,mfrac[:,cti.species_index(\textcolor{magenta}{'OH'})])
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'OH Mass Fraction'});
+        subplot(2,2,3)
+        plot(tim,mfrac[:,cti.species_index(\textcolor{magenta}{'H'})]);
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'H Mass Fraction'});
+        subplot(2,2,4)
+        plot(tim,mfrac[:,cti.species_index(\textcolor{magenta}{'H2'})]);
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'H2 Mass Fraction'});
+        show()
+\end{alltt}
+
+To plot the pressure against time, for example, you can switch \textcolor{red}{\textbf{temp[:]}} by \textcolor{red}{\textbf{press[:]}}... or you can add a new plot altogether !  \\
+
+To see another species' mass fraction, you just have to change the species name in \textcolor{magenta}{magenta} above by the name of another one, present in the \textbf{.cti file} you use.\\
+
+Don't forget to change the \textcolor{blue}{titles}, so that they fit your plots.
+\end{document}

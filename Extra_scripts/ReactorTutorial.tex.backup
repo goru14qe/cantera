@@ -1,0 +1,223 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage{verbatim}
+\usepackage{alltt}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+
+% Title Page
+\title{
+    \begin{minipage}\linewidth
+        \centering\bfseries\sffamily
+        Cantera Tutorial
+        \vskip10pt
+        \large Reactors
+    \end{minipage}
+}
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction - Objectives}
+
+\bigskip
+
+The aim of this tutorial is to help non-experienced users to compute, on CANTERA, an adiabatic reactor simulation. It provides the temporal evolution of certain properties of the mixture. 
+
+\section{Steps}
+\bigskip
+
+\# The begining of this section is the same as in the previous tutorial on the adiabatic flame temperature. If you're familiar with it, go directly to subsection \textbf{Reactors} \#
+\\
+
+A pre-compiled version of Cantera will be used. It can be found in the directory : 
+\begin{verbatim}
+/home/cfd2/cantera/CANTERA1.8_AVBP/
+\end{verbatim}
+This tutorial was carried out on version 1.8 under Python environment. 
+\subsection{Source path}
+
+\bigskip
+The first step is to source a path file to tell the shell where the commands can be found. The Python library will be used here, and the file looks like this :
+\\
+
+\verbatiminput{setup_cantera}
+
+
+My path file being called \textbf{setup\_cantera}, I just have to open a shell and type in the suitable directory : 
+
+\begin{verbatim}
+source setup_cantera
+\end{verbatim}
+\textbf{! You may require to execute the command 'bash' before sourcing !} 
+\\
+
+This operation needs to be done every time you will like to run Cantera in a new terminal.
+
+\subsection{Reactors}
+\bigskip
+
+The script to compute is to be downloaded here :  
+\url{http://www.cerfacs.fr/cantera/docs/scripts/reactor/reactor_HP_UV.py}
+
+
+By default, it will run a methane-air combustion (Gri3.0 mechanism) for which methane 'CH4' is the fuel species. The script is quite automated, so most of the modifications
+on temperature, pressure, equilibrium condition.. can be done directly in the shell.
+
+Then run it by typing : 
+
+\begin{verbatim}
+python reactor_HP_UV.py 
+\end{verbatim}
+
+As hilighted above, you will have to type the values of properties asked on screen. 
+
+For this exemple, the calculation was performed for the following properties : 
+\bigskip
+
+\begin{center}
+\textbf{Thermodynamic Properties :} \\
+\begin{tabular}{ c c }
+  \hline 
+  \hline
+  Stoichiometric ratio & 1 \\
+  Initial Temperature & 1500 K \\
+  Initial Pressure & 1 bar \\ 
+  \hline 
+  \hline
+\end{tabular}
+\end{center}
+\bigskip
+
+There are two types of process in this script : \\
+
+
+\begin{itemize}
+ \item A constant-pressure reactor (enthalpy H is held constant)
+ \item A constant-volume reactor (internal energy U is held constant)
+\end{itemize}
+\bigskip
+
+I choose first a constant-pressure reaction by typing \textbf{HP} in the terminal. (If you would like to run a constant volume reactor, you should have typed \textbf{UV} in the terminal instead of \textbf{HP}.) \\
+Then the computational properties are set : \bigskip 
+
+\begin{center}
+\textbf{Computational Properties :} \\
+\begin{tabular}{ c c }
+  \hline 
+  \hline
+  Number of time steps & 50 \\
+  Time step & 5ms \\
+  \hline 
+  \hline
+\end{tabular}
+\end{center}
+\bigskip
+
+If all is properly set up, the program will return the evolution of certain properties at different simulation time. 
+
+\begin{verbatim}
+time [s] ,   T [K] ,   p [Pa] ,   u [J/kg]
+ 5.000e-05   1504.029 101325.000   8.448990e+05
+ 1.000e-04   1504.012 101325.000   8.449017e+05
+ 1.500e-04   1504.036 101325.000   8.448908e+05
+ 2.000e-04   1504.126 101325.000   8.448591e+05
+ 2.500e-04   1504.309 101325.000   8.447992e+05
+[...]
+ 1.100e-03   1727.958 101325.004   7.676147e+05
+ 1.150e-03   2439.340 101325.002   5.102525e+05
+ 1.200e-03   2547.896 101325.001   4.823086e+05
+ 1.250e-03   2616.853 101325.001   4.648514e+05
+ 1.300e-03   2662.295 101325.000   4.534731e+05
+ 1.350e-03   2692.284 101325.000   4.460252e+05
+[...]
+ 2.400e-03   2742.218 101325.000   4.342545e+05
+ 2.450e-03   2742.013 101325.000   4.343269e+05
+ 2.500e-03   2741.812 101325.000   4.343976e+05
+\end{verbatim}
+\bigskip
+
+By the end, the datas are written in a \textbf{.csv} output file that can be imported into Excel.\\
+
+There is also a ploting option : \\
+If Matplotlib is properly installed on your operating system, you can view some plots of the results by running the script with the option \textbf{-plot} as follows : 
+\begin{verbatim}
+python reactor_HP_UV.py -plot
+\end{verbatim}
+
+
+\section{Several modifications}
+\bigskip
+
+\subsection{Try another mechanism}
+\bigskip
+
+If you'd like to change the mechanism used, you'll need to get the \textbf{.cti} file of this mechanism. 
+Once you get it, two steps are needed to run it properly : 
+
+\begin{enumerate}
+\item \textbf{Place the file in the right folder :}
+\\
+
+The \textbf{.cti} file needs to be in the following directory : 
+\begin{verbatim}CANTERA/INSTALL_DIRECTORY/canteraAVBP_python/data
+\end{verbatim}
+Just paste it in here.
+\\
+
+
+\item \textbf{Change script :}
+\\
+
+Open in a text editor the file \textbf{reactor\_HP\_UV.py}. \\ 
+In the first two lines :  
+
+\begin{alltt}
+\textcolor{cyan}{#Mechanism used for the process}
+cti = importPhase(\textcolor{magenta}{'gri30.cti'})
+
+\textcolor{cyan}{#Gaseous fuel species}
+fuel_species = \textcolor{magenta}{'CH4'}
+\end{alltt}
+\bigskip
+
+
+Replace 'gri30.cti' by the name of your \textbf{.cti} file. \\ 
+\textbf{! You may have to change the 'gaseous fuel species' !}
+\end{enumerate}
+
+
+\subsection{Change properties plotted}
+\bigskip
+
+To change the properties ploted, open again the file \textbf{reactor\_HP\_UV.py} in a text editor to get this : 
+\begin{alltt}
+        from matplotlib.pylab import *
+        clf
+        subplot(2,2,1)
+        plot(tim,\textcolor{red}{temp[:]})
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'Temperature (K)'});
+        subplot(2,2,2)
+        plot(tim,mfrac[:,cti.nSpecies(\textcolor{magenta}{'OH'})])
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'OH Mass Fraction'});
+        subplot(2,2,3)
+        plot(tim,mfrac[:,cti.nSpecies(\textcolor{magenta}{'H'})]);
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'H Mass Fraction'});
+        subplot(2,2,4)
+        plot(tim,mfrac[:,cti.nSpecies(\textcolor{magenta}{'H2'})]);
+        xlabel('Time (s)');
+        ylabel(\textcolor{cyan}{'H2 Mass Fraction'});
+        show()
+\end{alltt}
+
+If you want to plot pressure against time, you can change \textcolor{red}{\textbf{temp[:]}} by \textcolor{red}{\textbf{press[:]}} (or you can add a new plot if you wish). \\
+To change the species used in mass fraction against time plots, you just have to change the species hilighted in \textcolor{magenta}{magenta} above by the name of one other present in the \textbf{.cti file}.\\
+You can also plot any other possibility beetwen the four arrays : \textbf{tim, temp, press ans mfrac}.\\
+You will have to change the \textcolor{cyan}{titles} to fit your plots.
+\end{document}

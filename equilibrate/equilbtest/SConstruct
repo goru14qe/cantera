@@ -1,0 +1,13 @@
+env = Environment()
+
+env['CXX'] = 'g++'
+env.Append(CCFLAGS=['-pthread', '-O3', '-Wno-inline', '-g', '-std=c++0x'],
+           CPPPATH=['/mnt/d/2_Cantera/cantera/include', '/cantera/software/sundial_installation/INSTDIR/include'],
+           LIBS=['cantera', 'sundials_cvodes', 'sundials_ida', 'sundials_nvecserial', 'yaml-cpp'],
+           LIBPATH=['/mnt/d/2_Cantera/cantera/lib', '/cantera/software/sundial_installation/INSTDIR/lib'],
+           RPATH=['/mnt/d/2_Cantera/cantera/lib', '/cantera/software/sundial_installation/INSTDIR/lib'],
+           LINKFLAGS=['-pthread'],
+           FRAMEWORKS=[])
+
+program = env.Program('equilbtest', 'equilbtest.cpp')
+Default(program)
