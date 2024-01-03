@@ -1,0 +1,208 @@
+c	Geometry
+#key    files	dx		x_c		y_c			z_c
+stl		1		2.5e-5	0.001	0.0010005	0.00100007
+TEST//0D//flow.stl
+c	General
+#Dx		Dt		Nx	Ny	Nz
+2.5e-5	8e-9	3	3	3
+c	Parallel Processing
+# 	Np_X	Np_Y	Np_Z
+	1		1		1
+c	Input-Output Data
+#t_num	t_data	t_vtk	t_info	t_time	t_recovery	t_start
+40000  1000    1000		1000	2000000	20000		0
+c	Residual Data
+#t_resi	res_u	res_t	res_spec
+200		1e-9	1e-7	1e-9
+
+##############################################
+
+c	Flow Field Solver
+#d	q	rho_0	nu_0		F_x	F_y	F_z	p_th	M_av
+3	27	2.1047e-01	2.6840e-04	0	0   0   101325  0.02897
+
+c	Flow Field Initial Conditions
+#index	type	density	u_x	u_y	u_z
+1		-1		2.1047e-01	0.0	0.0	0.0
+
+##############################################
+
+c	Flow Field Boundary Conditions
+#n BC    curved?
+0        1  0.0
+#index    in_z    out_z    type    filter    turbulence    <parameter name>    <parameter value>
+#1        1        1        4        0        0
+
+#    type 1 = Wall
+#    type 2 = Velocity
+#    type 3 = Pressure
+#    type 4 = Zero-gradient
+
+c	Flow Field Space-Dependent Boundary Conditions
+0
+#index    D    type        xc        yc        zc		R		W		ux		uy	uz
+#1        2    Poiseuille    0.001    0.001    0.001	0.0025	0.0001	0.615	0	0
+
+##############################################
+
+c	Temperature Field Solver
+#d	q	E0	T0	gbeta	Tinf	E?T?    Gamma
+2	9	1.  1.  0    	1.0    	0.    	1.
+
+c	Temperature Field Initial Conditions
+#    outside=1, in domain=-1
+#index	type	temperature		cp 		lamda
+1    	-1    	1600.    	   	1480.77	1.1398e-01
+
+c	Temperature Field Boundary Conditions
+#number of boundaries for the thermal solver
+0        1
+#index    in_z    out_z    type    <parameter name>    <parameter value>
+#1        1        2        104
+
+##############################################
+
+c	Species Field Solver
+#d	q	Nb_spec	M_ref
+2	9	53		0.027633
+#name     Molar Mass
+H2     0.002016
+H      0.001008
+O      0.015999
+O2     0.031998
+OH     0.017007
+H2O    0.018015
+HO2    0.033006
+H2O2   0.034014
+C      0.012011
+CH     0.013019
+CH2    0.014027
+CH2(S) 0.014027
+CH3    0.015035
+CH4    0.016043
+CO     0.028010
+CO2    0.044009
+HCO    0.029018
+CH2O   0.030026
+CH2OH  0.031034
+CH3O   0.031034
+CH3OH  0.032042
+C2H    0.025030
+C2H2   0.026038
+C2H3   0.027046
+C2H4   0.028054
+C2H5   0.029062
+C2H6   0.030070
+HCCO   0.041029
+CH2CO  0.042037
+HCCOH  0.042037
+N      0.014007
+NH     0.015015
+NH2    0.016023
+NH3    0.017031
+NNH    0.029022
+NO     0.030006
+NO2    0.046005
+N2O    0.044013
+HNO    0.031014
+CN     0.026018
+HCN    0.027026
+H2CN   0.028034
+HCNN   0.041033
+HCNO   0.043025
+HOCN   0.043025
+HNCO   0.043025
+NCO    0.042017
+N2     0.028014
+AR     0.039950
+C3H7   0.043089
+C3H8   0.044097
+CH2CHO 0.043045
+CH3CHO 0.044053
+
+c	Flow Field Space-Dependent Boundary Conditions
+0
+#index	D	type	xc		yc	zc			R		W		ux	uy	uz
+#4		2	Tanh	1.01925	1.	1.0000017	0.01915	0.0001	0	0.30	0
+
+c	Reactions
+#N_reac
+325
+#Reaction_type
+
+
+c	CANTERA Libraries
+TEST/0D/gri30.yaml gri30	mixture-averaged
+
+c	Species Field Initial Conditions
+#    outside=1, in domain=-1
+# ----------------------------------
+# (flow domain)
+1    -1    53
+#    Initial mass fractions (FLOW)
+H2     0.000000    H      0.000000
+O      0.000000    O2     0.220141
+OH     0.000000    H2O    0.000000
+HO2    0.000000    H2O2   0.000000
+C      0.000000    CH     0.000000
+CH2    0.000000    CH2(S) 0.000000
+CH3    0.000000    CH4    0.055187
+CO     0.000000    CO2    0.000000
+HCO    0.000000    CH2O   0.000000
+CH2OH  0.000000    CH3O   0.000000
+CH3OH  0.000000    C2H    0.000000
+C2H2   0.000000    C2H3   0.000000
+C2H4   0.000000    C2H5   0.000000
+C2H6   0.000000    HCCO   0.000000
+CH2CO  0.000000    HCCOH  0.000000
+N      0.000000    NH     0.000000
+NH2    0.000000    NH3    0.000000
+NNH    0.000000    NO     0.000000
+NO2    0.000000    N2O    0.000000
+HNO    0.000000    CN     0.000000
+HCN    0.000000    H2CN   0.000000
+HCNN   0.000000    HCNO   0.000000
+HOCN   0.000000    HNCO   0.000000
+NCO    0.000000    N2     0.724672
+AR     0.000000    C3H7   0.000000
+C3H8   0.000000    CH2CHO 0.000000
+CH3CHO 0.000000    
+#    Initial diffusion coefficients (FLOW)
+H2     1.2783e-03    H      2.1280e-03
+O      5.4952e-04    O2     3.4670e-04
+OH     5.3917e-04    H2O    4.6952e-04
+HO2    3.5703e-04    H2O2   3.5462e-04
+C      5.1664e-04    CH     5.8778e-04
+CH2    4.0292e-04    CH2(S) 4.0292e-04
+CH3    3.9391e-04    CH4    4.0737e-04
+CO     3.5434e-04    CO2    2.8896e-04
+HCO    3.1185e-04    CH2O   3.0929e-04
+CH2OH  3.0318e-04    CH3O   3.0318e-04
+CH3OH  3.0249e-04    C2H    3.0413e-04
+C2H2   3.0103e-04    C2H3   2.9814e-04
+C2H4   2.9815e-04    C2H5   2.7379e-04
+C2H6   2.7156e-04    HCCO   4.4423e-04
+CH2CO  2.6239e-04    HCCOH  2.6239e-04
+N      4.9046e-04    NH     5.7883e-04
+NH2    5.6698e-04    NH3    4.4022e-04
+NNH    3.4590e-04    NO     3.5142e-04
+NO2    3.1328e-04    N2O    2.8507e-04
+HNO    3.5637e-04    CN     3.4861e-04
+HCN    3.1006e-04    H2CN   3.0724e-04
+HCNN   4.4422e-04    HCNO   2.8633e-04
+HOCN   2.8633e-04    HNCO   2.8633e-04
+NCO    2.8767e-04    N2     3.5368e-04
+AR     3.4869e-04    C3H7   2.1198e-04
+C3H8   2.1103e-04    CH2CHO 2.6118e-04
+CH3CHO 2.6001e-04    
+
+c	Species Field Boundary Conditions
+#number of boundaries for the species solver
+0	1
+#index    in_zone    out    type    <parameter name>    <parameter value>
+#1    1    2    104    6    O2    CH4    N2    CO2    H2O    CO
+
+#    type 1 = Zero mass fraction
+#    type 2 = Non-zero mass fraction
+#    type 3 = Zero flux
+#    type 4 = Constant flux

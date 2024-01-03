@@ -1,0 +1,112 @@
+c	Geometry
+#key    files	dx		x_c		y_c			z_c
+stl		1		2.5e-5	0.001	0.0010005	0.00100007
+TEST//0D//flow.stl
+c	General
+#Dx		Dt		Nx	Ny	Nz
+2.5e-5	2e-9	3	3	3
+c	Parallel Processing
+# 	Np_X	Np_Y	Np_Z
+	1		1		1
+c	Input-Output Data
+#t_num	t_data	t_vtk	t_info	t_time	t_recovery	t_start
+3000  5   		 5		5		20		50000		0
+
+c	Residual Data
+#t_resi	res_u	res_t	res_spec
+200		1e-9	1e-7	1e-9
+##############################################
+
+c	Flow Field Solver
+#d	q	rho_0	nu_0		F_x	F_y	F_z	p_th	M_av
+3	27	1.7783e-01	2.6194e-04	0	0   0   101325  0.02897
+
+c	Flow Field Initial Conditions
+#index	type	density	u_x	u_y	u_z
+1		-1		1.7783e-01	0.0	0.0	0.0
+
+##############################################
+
+c	Flow Field Boundary Conditions
+#n BC    curved?
+0        1	0.0
+#index    in_z    out_z    type    filter    turbulence    <parameter name>    <parameter value>
+#1        1        1        4        0        0
+
+#    type 1 = Wall
+#    type 2 = Velocity
+#    type 3 = Pressure
+#    type 4 = Zero-gradient
+
+c	Flow Field Space-Dependent Boundary Conditions
+0
+#index    D    type        xc        yc        zc		R		W		ux		uy	uz
+#1        2    Poiseuille    0.001    0.001    0.001	0.0025	0.0001	0.615	0	0
+
+##############################################
+
+c	Temperature Field Solver
+#d	q	E0	T0	gbeta	Tinf	E?T?    Gamma
+2	9	1.  1.  0    	1.0    	0.    	1.
+
+c	Temperature Field Initial Conditions
+#    outside=1, in domain=-1
+#index	type	temperature	cp 		lamda
+1    	-1    	1200.		2204.40  1.8239e-01
+
+c	Temperature Field Boundary Conditions
+#number of boundaries for the thermal solver
+0        1
+#index    in_z    out_z    type    <parameter name>    <parameter value>
+#1        1        2        104
+
+##############################################
+
+c	Species Field Solver
+#d     q     Nb_spec     M_ref
+2     9     9           0.02171
+#name     Molar Mass
+H2     0.002016
+H      0.001008
+O2     0.031998
+OH     0.017007
+O      0.015999
+H2O    0.018015
+HO2    0.033006
+H2O2   0.034014
+N2     0.028014
+
+c	Reactions
+#N_reac
+12
+
+c	CANTERA Libraries
+TEST/0D/h2_williams_12.yaml h2_williams_12	mixture-averaged
+
+c	Species Field Initial Conditions
+#    outside=1, in domain=-1
+# ----------------------------------
+# (flow domain)
+1    -1    9
+#    Initial mass fractions (FLOW)
+H2     0.028782    H      0.000000
+O2     0.456827    OH     0.000000
+O      0.000000    H2O    0.514391
+HO2    0.000000    H2O2   0.000000
+N2     0.000000    
+#    Initial diffusion coefficients (FLOW)
+H2     1.1903e-03    H      1.6839e-03
+O2     2.6820e-04    OH     4.7671e-04
+O      4.8442e-04    H2O    4.3485e-04
+HO2    3.1617e-04    H2O2   3.1441e-04
+N2     3.1245e-04    
+
+c	Species Field Boundary Conditions
+#number of boundaries for the species solver
+0	1
+#index    in_zone    out    type    <parameter name>    <parameter value>
+#1    1    2    104    6    O2    CH4    N2    CO2    H2O    CO
+#    type 1 = Zero mass fraction
+#    type 2 = Non-zero mass fraction
+#    type 3 = Zero flux
+#    type 4 = Constant flux

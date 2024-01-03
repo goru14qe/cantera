@@ -1,0 +1,88 @@
+c	Geometry
+stl	1	0.02	10.0001	10.0003	10.0002	
+..//..//tests//data//gaussian_hill//body.stl
+##################################################################
+c	General
+#Dx	Dt	Nx	Ny	Nz
+0.01	4.0e-5	200	200	3
+##################################################################
+c	Parallel Processing
+2	2	1
+##################################################################
+c	Input-Output Data
+#t_num	t_data	t_vtk	t_info	t_time	t_recovery	t_start
+5000	50000	1000	5500	5500	6000000	 0
+##################################################################
+c	Residual Data
+#t_resi	res_u	res_t	res_spec	gamma
+200	1e-9	1e-7	1e-9	10000
+##################################################################
+c	Flow Field Solver
+#d	q	rho_0	nu	g_x	g_y	g_z	p_th	M_av
+2	9	1	1.0e-6	0.0	0	0	1e5	0.0
+##################################################################
+c	Temperature Field Solver
+#d	q	E_0	T_0	gbeta	T_infinity	VAR_switch	Gamma
+2	9	1	1	0		0			0.			0
+##################################################################
+c	Temperature Field Gaussian Initial Conditions
+#dim	sigma0	x0	y0	z0 	T_min	T_max	cp	lambda	
+2		0.01	1.0	1.0	10	0.0		1.0		1	1.0e-3
+##################################################################
+c	Species Field Solver
+#d	q	Nb_spec	K_sup_sat	molar_mass_av_0	gamma_x	gamma_y	gamma_z
+2	9	1	0.3	1.0	1.0	1.0	1.0
+#Spec_names	M
+Ho	1
+###############################################
+c	Reactions
+#N_reac
+0
+###############################################
+c	Species Field Gaussian Initial Conditions
+#dim	sigma0	x0	y0	z0	Ini_D	
+2	0.01	1.0	1.0	10	1.0e-3
+##################################################################
+c	Flow Field Initial Conditions
+#index	type	density	u_x	u_y	u_z
+#	solid=1, fluid=-1
+1	1	1	0.0	0.0	0.0
+##############################################
+c	Flow Field Boundary Conditions
+#number of boundaries for the flow solver
+0 0
+#index	inzone	outzone	type	filter trunc	<parameter name>	<parameter value>
+
+#	type 1 = Wall
+#	type 2 = Velocity
+#	type 3 = Pressure
+#	type 4 = Zero-gradient
+##############################################
+c	Temperature Field Initial Conditions
+#index	type	temp	cp	lambda
+#	outside=1, in domain=-1
+1	-1	0.0	1	0.0
+##################################################
+c	Temperature Field Boundary Conditions
+#number of boundaries for the thermal solver
+0
+#index	in_zone	out_zone	type	n_x	n_y	n_z	<parameter name>	<parameter value>
+#For curved surfaces only solid wall boundary can be applied
+#For curved surfaces set n_x, N_y and n_z to 0
+#	type 1 = Zero temperature
+#	type 2 = Non-zero temperature
+#	type 3 = Adiabatic
+#	type 4 = Constant flux
+#################################################################
+c	Species Field Boundary Conditions
+#number of boundaries for the species solver
+0
+#index	in	out	type	counter				
+#For curved surfaces only solid wall boundary can be applied
+#	type 1 = Zero Flux
+#	type 2 = Non-zero concentration
+#	type 3 = Zero gradient
+#	type 4 = Zero flux
+##############################################
+
+

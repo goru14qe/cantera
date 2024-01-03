@@ -1,0 +1,100 @@
+c	Geometry
+#key    files	dx		x_c		y_c			z_c
+stl		1		2.5e-5	0.001	0.0010005	0.00100007
+TEST//0D//flow.stl
+c	General
+#Dx		Dt		Nx	Ny	Nz
+2.5e-5	8e-8	3	3	3
+c	Parallel Processing
+# 	Np_X	Np_Y	Np_Z
+	1		1		1
+c	Input-Output Data
+#t_num	t_data	t_vtk	t_info	t_time	t_recovery	t_start
+300000  20000    20000	20000	300000	50000		0
+
+c	Residual Data
+#t_resi	res_u	res_t	res_spec
+200		1e-9	1e-7	1e-9
+##############################################
+
+c	Flow Field Solver
+#d	q	rho_0	nu_0		F_x	F_y	F_z	p_th	M_av
+3	27	0.37418	1.0379e-04	0	0   0   101325  0.02897
+
+c	Flow Field Initial Conditions
+#index	type	density	u_x	u_y	u_z
+1		-1		0.37418	0.0	0.0	0.0
+
+##############################################
+
+c	Flow Field Boundary Conditions
+#n BC    curved?
+0        1	0.0
+#index    in_z    out_z    type    filter    turbulence    <parameter name>    <parameter value>
+#1        1        1        4        0        0
+
+#    type 1 = Wall
+#    type 2 = Velocity
+#    type 3 = Pressure
+#    type 4 = Zero-gradient
+
+c	Flow Field Space-Dependent Boundary Conditions
+0
+#index    D    type        xc        yc        zc		R		W		ux		uy	uz
+#1        2    Poiseuille    0.001    0.001    0.001	0.0025	0.0001	0.615	0	0
+
+##############################################
+
+c	Temperature Field Solver
+#d	q	E0	T0	gbeta	Tinf	E?T?    Gamma
+2	9	1.  1.  0    	1.0    	0.    	1.
+
+c	Temperature Field Initial Conditions
+#    outside=1, in domain=-1
+#index	type	temperature	cp 		lamda
+1    	-1    	900.		1304.39  6.9968e-02
+
+c	Temperature Field Boundary Conditions
+#number of boundaries for the thermal solver
+0        1
+#index    in_z    out_z    type    <parameter name>    <parameter value>
+#1        1        2        104
+
+##############################################
+
+c	Species Field Solver
+#d	q	Nb_spec	M_ref
+2	9	6		0.027633
+#name	W
+O2	0.032
+H2O	0.018
+CH4	0.016
+CO	0.028
+CO2	0.044
+N2	0.028
+
+c	Reactions
+#N_reac
+2
+
+c	CANTERA Libraries
+TEST/0D/BFER_methane.yaml CH4_BFER_mix	mixture-averaged
+
+c	Species Field Initial Conditions
+#    outside=1, in domain=-1
+# ----------------------------------
+# (flow domain)
+1    -1    6
+#    Initial mass fractions (FLOW)
+O2	2.2014e-01	CH4	5.5187e-02	N2	7.2467e-01	CO2	1.0400e-15	H2O	8.8800e-16	CO	2.4700e-17
+O2	1.3300e-04	CH4	1.5588e-04	N2	1.3563e-04	CO2	1.1004e-04	H2O	1.7479e-04	CO	1.3606e-04
+
+c	Species Field Boundary Conditions
+#number of boundaries for the species solver
+0	1
+#index    in_zone    out    type    <parameter name>    <parameter value>
+#1    1    2    104    6    O2    CH4    N2    CO2    H2O    CO
+#    type 1 = Zero mass fraction
+#    type 2 = Non-zero mass fraction
+#    type 3 = Zero flux
+#    type 4 = Constant flux

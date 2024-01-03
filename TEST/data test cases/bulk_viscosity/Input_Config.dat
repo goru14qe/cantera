@@ -1,0 +1,41 @@
+c	Geometry
+#keyword	NoF	dx		x0		y0			z0
+stl			1	1e-2	9.7971	10.1		10.1
+..//..//tests//data//bulk_viscosity//Flow.stl
+c	General
+#Dx		Dt			Nx	Ny	Nz
+1e-2	0.001		106	5	3
+c	Parallel Processing
+3	1	1
+c	Input-Output Data
+#t_num	t_data	t_vtk		t_info	t_time	t_recovery	t_start
+10000	200000	50		50000	50000	500001		0
+c	Residual Data
+#t_resi	res_u	res_t	res_spec
+200		1e-9	1e-7	1e-9
+c	Flow Field Solver
+#d	q	rho_0	nu		F_x		F_y		F_z	p_th	M_av
+2	9	1		0.05	0		0.0		0	1e5		0.02945
+c	Temperature Field Solver
+#d	q	E_0	T_0	gbeta	T_ref	E?T?	Gamma
+2	9	300	300	0		0		0.		1.
+##############################################
+#	solid=1, fluid=-1
+c	Flow Field Initial Conditions
+#index	type	density	u_x		u_y		u_z		del_rho
+1		1		1.0		-0.3	0.0		0.0		1e-6
+c	Flow Field Boundary Conditions
+#number of boundaries for the flow solver
+1	1 0.0
+#index	in_zone	out_zone	type	filter	noise	<parameter name>	<parameter value>
+1		2		1			1		0		0			
+#	type 1 = Wall
+#	type 2 = Velocity
+#	type 3 = Pressure
+#	type 4 = Zero-gradient
+##############################################
+c	Temperature Field Initial Conditions
+#	outside=1, in domain=-1
+#index	type	temperature
+1		1		1.0		0	0
+c	Temperature Field Boundary Conditions

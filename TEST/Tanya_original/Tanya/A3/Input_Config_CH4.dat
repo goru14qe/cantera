@@ -1,0 +1,198 @@
+c	Geometry
+# A3 configuration 2-D
+# CH4, REGATH, BFER2
+#key	files	x_c			y_c			z_c
+stl		11		0.999300003	0.999300001	1.0000017
+..//examples//TEST//multi-species//A3_2D//new//flow.stl
+..//examples//TEST//multi-species//A3_2D//new//adiabatic_cylinders.stl
+..//examples//TEST//multi-species//A3_2D//new//left_wall.stl
+..//examples//TEST//multi-species//A3_2D//new//right_wall.stl
+..//examples//TEST//multi-species//A3_2D//new//inlet_left.stl
+..//examples//TEST//multi-species//A3_2D//new//inlet_center.stl
+..//examples//TEST//multi-species//A3_2D//new//inlet_right.stl
+..//examples//TEST//multi-species//A3_2D//new//outlet.stl
+..//examples//TEST//multi-species//A3_2D//new//inlet_wall_right.stl
+..//examples//TEST//multi-species//A3_2D//new//inlet_wall_left.stl
+..//examples//TEST//multi-species//A3_2D//new//isothermal_cylinders_centered.stl
+c	General
+#Dx		Dt		Nx		Ny			Nz	Dim
+2e-4	3e-7	470		410			1	2
+##############################################
+c	Parallel Processing
+#X-CPU	Y-CPU	Z-CPU	Buffer
+2		2		1		4
+c	Input-Output Data
+#t_num	t_data	t_vtk	t_info		t_time		t_recovery	t_start
+500000	100		5		1			2000		3000000		0
+c	Residual Data
+#conv	convergence
+0		1e-10
+##############################################
+c	Flow Field Solver
+#d	q	e_order	rho_0	rho_ref	nu		F_x	F_y	F_z	p_th	M_av
+3	27	2		1.1842	1.1842	1.62e-5	0	0	0	101325	0.02897
+c	Flow EoS
+#EoS	a	b	R	omega	Tc
+Ideal	0	0	1	0	0.33
+c	Flow Initial Condition Type
+USERDEFINED
+#	solid=1, fluid=-1
+c	Flow Field Initial Conditions
+#index	type	density	u_x	u_y	u_z
+1	-1	1.1842	0.0	0.0	0.0
+2	1	1.1842	0.0	0.0	0.0
+3	1	1.1842	0.0	0.0	0.0
+4	1	1.1842	0.0	0.0	0.0
+5	1	1.1842	0.0	0.0	0.0
+6	1	1.1842	0.0	0.0	0.0
+7	1	1.1842	0.0	0.0	0.0
+8	1	1.1842	0.0	0.0	0.0
+9	1	1.1842	0.0	0.0	0.0
+10	1	1.1842	0.0	0.0	0.0
+11	1	1.1842	0.0	0.0	0.0
+c	Flow Field Boundary Conditions
+#n BC	curved?
+10		1
+#index	in_z	out_z	type	filter	turbulence	<parameter name>	<parameter value>
+1		1		2		1	0	0
+2		1		3		1	0	0
+3		1		4		1	0	0
+4		1		5		18	0	0	0	0.30	0
+5		1		6		18	0	0	0	0.30	0
+6		1		7		18	0	0	0	0.30	0
+7		1		8		19	0	0	0
+8		1		9		18	0	0	0	0		0
+9		1		10		18	0	0	0	0		0
+10		1		11		1	0	0
+c	Flow Field Space-Dependent Boundary Conditions
+3
+#index	D	type	xc		yc	zc			R		W		ux	uy	uz
+4		2	Tanh	1.01925	1.	1.0000017	0.01915	0.0001	0	0.30	0
+5		2	Tanh	1.046	1.	1.0000017	0.0053	0.0001	0	0.30	0
+6		2	Tanh	1.07275	1.	1.0000017	0.01915	0.0001	0	0.30	0
+##############################################
+c	Temperature Field Solver
+#d	q	E_0	T_0	gbeta	T_ref	E?T?	Gamma
+2	5	298.15	298.15	0	0	0.	1.
+c	Temperature Field Initial Conditions
+#	outside=1, in domain=-1
+#index	type	temperature
+1	1	298.15	1008.	0.024
+2	1	298.15	1008.	0.024
+3	1	298.15	1008.	0.024
+4	1	298.15	1008.	0.024
+5	1	298.15	1008.	0.024
+6	1	298.15	1008.	0.024
+7	1	298.15	1008.	0.024
+8	1	298.15	1008.	0.024
+9	1	298.15	1008.	0.024
+10	1	298.15	1008.	0.024
+11	1	298.15	1008.	0.024
+c	Temperature Field Boundary Conditions
+#number of boundaries for the thermal solver
+10		1
+#index	in_z	out_z	type	<parameter name>	<parameter value>
+1		1		2	104
+2		1		3	104
+3		1		4	104
+4		1		5	102	298.15
+5		1		6	102	298.15
+6		1		7	102	298.15
+7		1		8	104
+8		1		9	104
+9		1		10	104
+10		1		11	104
+##############################################
+c	Species Field Solver
+#d	q	Nb_spec	M_ref
+2	5	6		0.02897
+#name	W		Le
+O2		0.032	1
+CH4		0.044	1
+N2		0.028	1
+CO2		0.044	1
+H2O		0.018	1
+CO		0.028	1
+c	Species Diffusion Model
+constant_Dk
+c	REGATH Libraries
+name	name
+c	CANTERA Libraries
+name	name
+c	Species Field Initial Conditions
+#index	type
+#	outside=1, in domain=-1
+# ----------------------------------
+#left flow (flow domain)
+1	1	6	Y
+#	Initial mass fractions (FLOW)
+O2	0.220148673	CH4	0.055186325	N2	0.724665002	CO2	1.04894398776654E-15	H2O	8.88679727270733E-16	CO	2.4717388457283E-17
+# ----------------------------------
+#left flow (solid cylinders)
+2	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (solid left)
+3	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (solid right)
+4	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (inlet left)
+5	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (inlet center)
+6	1	6	Y
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (inlet right)
+7	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (outlet)
+8	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (wall left)
+9	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (wall right)
+10	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+#left flow (wall right)
+11	1	6	X
+#	Initial mass fractions
+O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+# ----------------------------------
+c	Species Field Boundary Conditions
+#number of boundaries for the species solver
+0		1
+#index	in_zone	out	type	<parameter name>	<parameter value>
+1		1		2	104		6	O2	CH4	N2	CO2	H2O	CO
+2		1		3	104		6	O2	CH4	N2	CO2	H2O	CO
+3		1		4	104		6	O2	CH4	N2	CO2	H2O	CO
+4		1		5	102		6	X	O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+5		1		6	102		6	Y	O2	0.220148673	CH4	0.055186325	N2	0.724665002	CO2	1.04894398776654E-15	H2O	8.88679727270733E-16	CO	2.4717388457283E-17
+6		1		7	102		6	X	O2	0.21	CH4	0	N2	0.79	CO2	0	H2O	0	CO	0
+7		1		8	104		6	O2	CH4	N2	CO2	H2O	CO
+8		1		9	104		6	O2	CH4	N2	CO2	H2O	CO
+9		1		10	104		6	O2	CH4	N2	CO2	H2O	CO
+10		1		11	104		6	O2	CH4	N2	CO2	H2O	CO
+#	type 1 = Zero mass fraction
+#	type 2 = Non-zero mass fraction
+#	type 3 = Zero flux
+#	type 4 = Constant flux

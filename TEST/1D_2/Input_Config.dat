@@ -1,0 +1,154 @@
+c	Geometry
+#key    files	dx		x_c			y_c		z_c
+stl		3		8e-06 0.011686 0.021978 0.007448
+
+TEST//1D_2//Inlet.stl
+TEST//1D_2//Outlet.stl
+TEST//1D_2//Flow.stl
+
+c	General
+#Dx		Dt		Nx		Ny	Nz
+8e-06 3.052e-08 1881 5 5
+
+c	Parallel Processing
+# 	Np_X	Np_Y	Np_Z
+	5		1		1
+
+c	Input-Output Data
+#t_num	t_data	t_vtk	t_info	t_time	t_recovery		t_start
+400000	100	100	100	100		50000		0
+
+c	Residual Data
+#t_resi	res_u	res_t	res_spec
+200		1e-9	1e-7	1e-9
+
+##############################################
+
+c	Flow Field Solver
+#d	q	rho_0		nu_0		F_x	F_y	F_z	p_th	M_av
+3	27	4.2095e-01	8.5353e-05	0	0   0   101325  0.02897
+
+c	Flow Field Initial Conditions
+#index	type	density		u_x	u_y	u_z		dis_type	x0		x1		y0		y1		z0		z1		thickness
+-1		-1		4.2095e-01	8.403	0.0	0.0		Tanh	0.0192	0.0267	0.0145	0.0295	0.0000	0.0150	0.0001
+1		 1		4.2095e-01	2.621	0.0	0.0
+2		 1		4.2095e-01	8.403	0.0	0.0
+3		-1		4.2095e-01	2.621	0.0	0.0
+#-1		-1		4.2095e-01	8.403	0.0	0.0		Tanh	0.0192	0.0267	0.0145	0.0295	0.0000	0.0150	0.0001
+
+##############################################
+
+c	Flow Field Boundary Conditions
+#n BC    curved?
+2        1 0.0
+#index	in_z    out_z   Type	filter	turbulence	<parameter value>				
+1		3		1		2		0		0			0.01	0	0	0
+2		3		2		4		0		0			0	0	0
+
+#c	Flow Field Space-Dependent Boundary Conditions
+0
+#index	D	type	xc		yc	zc		R		W	ux		uy	uz
+0		2	Tanh	0.002 0.005 0.0115 0.005 0.0001	0.0000	0	0
+
+##############################################
+
+c	Temperature Field Solver
+#d	q	E_0		T_0		gbeta	T_ref	E?T?	Gamma
+2	5	298.15	298.15	0		0		0.		1.
+
+c	Temperature Field Initial Conditions
+#    outside=1, in domain=-1
+#index	type	temperature	cp		lamda		dis_type	x0		x1		y0		y1		z0		z1		thickness
+-1		-1		2400	1533.411  0.1704		Tanh	0.0192	0.0267	0.0145	0.0295	0.0000	0.0150	0.0001
+1		1		800.0	1264.45   6.3101e-02
+2		1		2400	1533.411  0.1704	
+3		-1		800.0	1264.45   6.3101e-02
+
+c	Temperature Field Boundary Conditions
+#number of boundaries for the thermal solver
+2
+#index	in_z	out_z	type    <parameter name>    <parameter value>
+1		3		1		102	800.0
+2		3		2		104
+##############################################
+
+c	Species Field Solver
+#d	q	Nb_spec	M_ref
+2	5	6		0.02897
+#name     Molar Mass
+O2     0.031998
+H2O    0.018015
+CH4    0.016043
+CO     0.028010
+CO2    0.044009
+N2     0.028014
+
+c	Reactions
+#N_reac
+2
+
+c	CANTERA Libraries
+TEST/1D/BFER_methane.yaml CH4_BFER_mix	mixture-averaged
+
+c	Species Field Initial Conditions
+#    outside=1, in domain=-1
+# ----------------------------------
+-1  -1  6
+#    Mass Fractions (AFTER FLAME SIMULATION)
+O2     0.015207    H2O    0.123940
+CH4    -0.000000    CO     0.026623
+CO2    0.109558    N2     0.724672
+
+#    Diffusion Coefficients (AFTER FLAME SIMULATION)
+O2     7.8452e-04    H2O    1.0663e-03
+CH4    8.5529e-04    CO     7.7442e-04
+CO2    6.1756e-04    N2     7.9001e-04
+
+Tanh	0.0192	0.0267	0.0145	0.0295	0.0000	0.0150	0.0001
+
+# (inlet)
+1    1    6
+##    Initial mass fractions (FLOW)
+O2     0.220141    H2O    0.000000
+CH4    0.055187    CO     0.000000
+CO2    0.000000    N2     0.724672
+
+#    Initial diffusion coefficients (FLOW)
+O2     1.0918e-04    H2O    1.4200e-04
+CH4    1.2787e-04    CO     1.1172e-04
+CO2    9.0060e-05    N2     1.1133e-04
+
+# (outlet)
+2    1    6
+#    Mass Fractions (AFTER FLAME SIMULATION)
+O2     0.015207    H2O    0.123940
+CH4    -0.000000    CO     0.026623
+CO2    0.109558    N2     0.724672
+
+#    Diffusion Coefficients (AFTER FLAME SIMULATION)
+O2     7.8452e-04    H2O    1.0663e-03
+CH4    8.5529e-04    CO     7.7442e-04
+CO2    6.1756e-04    N2     7.9001e-04
+
+# (flow domain)
+3    -1    6
+#    Initial mass fractions (FLOW)
+O2     0.220141    H2O    0.000000
+CH4    0.055187    CO     0.000000
+CO2    0.000000    N2     0.724672
+
+#    Initial diffusion coefficients (FLOW)
+O2     1.0918e-04    H2O    1.4200e-04
+CH4    1.2787e-04    CO     1.1172e-04
+CO2    9.0060e-05    N2     1.1133e-04
+
+c	Species Field Boundary Conditions
+#number of boundaries for the species solver
+2
+#index	in_zone	out	type	<parameter name>    <parameter value>
+1		3		1	102		6   O2     0.220141    H2O    0.000000 CH4    0.055187    CO     0.000000 CO2    0.000000    N2     0.724672
+2		3		2	104		6	O2	H2O	CH4	CO	CO2	N2			
+#    type 1 = Zero mass fraction
+#    type 2 = Non-zero mass fraction
+#    type 3 = Zero flux
+#    type 4 = Constant flux

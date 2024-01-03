@@ -1,0 +1,81 @@
+c	Geometry
+stl	4	0.001		0.0985		0.0985	0.0985	
+..//..//tests//data//particle_sed2//up.stl
+..//..//tests//data//particle_sed2//down.stl
+..//..//tests//data//particle_sed2//wall.stl
+..//..//tests//data//particle_sed2//flow.stl
+c	General
+#Dx		Dt			Nx		Ny		Nz
+0.001	0.000284		164		104		104
+c	Parallel Processing
+5	1	1
+c	Input-Output Data
+#t_num	t_data		t_vtk		t_info		t_time		t_recovery	t_start
+7000	10000		50			50			50			8000		0
+c	Residual Data
+#t_resi	res_u	res_t	res_spec
+200		1e-9	1e-7	1e-9
+c	Flow Field Solver
+#d	q	rho_0	vis		 F_x		F_y		F_z		p_th		M_av
+3	27	962	1.174636175e-4	0		0		0		1e5		0.02945
+c	Temperature Field Solver
+#d	q	E_0	T_0	gbeta	T_ref	E?T?	Gamma
+3	7	300	300	0		0		0.		1.
+##############################################
+#	solid=1, fluid=-1
+c	Flow Field Initial Conditions
+#index		type		density		u_x		u_y		u_z
+1		1		1.0		0.0		0.0		0.0
+2		1		1.0		0.0		0.0		0.0
+3		1		1.0		0.0		0.0		0.0
+4		-1		962		0.0		0.0		0.0
+##############################################
+c	Pipe Initialization
+#center_y	center_z	radius		ystar	ustar
+1.		1.		0.1		5.56e-4	0.0018
+##############################################
+c	Flow Field Boundary Conditions
+#number of boundaries for the flow solver
+1	0
+#index	inzone	outzone	type	filter	turbulence		<parameter name>	<parameter value>
+1		4		1		1		0		0
+2		4		2		1		0		0
+3		4		3		1		0		0
+#	type 1 = Wall
+#	type 2 = Velocity
+#	type 3 = Pressure
+#	type 4 = Zero-gradient
+
+##############################################
+c	Flow Averaging
+#start_sampling frequency_sampling
+900		0.00314
+##############################################
+c	Temperature Field Initial Conditions
+#index	type	temp	cp	lambda
+#	outside=1, in domain=-1
+1	1	100.0	0	0
+2	1	100.0	0	0
+4	1	100.0	0	0
+3	1	100.0	0	0
+c	Temperature Field Boundary Conditions
+#number of boundaries for the thermal solver
+0
+
+##############################################
+c	Particle data
+#	num_particles	particle_num_nodes	particle_radius(lb)	particle_center_x(lb)	particle_center_y(lb)	particle_center_z(lb)	ini_v_x(m/s)	ini_v_y(m/s)	ini_v_z(m/s)
+1		708			7.5			129					53	53				0.0			0.0	0.0        		
+#particle_gravity_x(m/s2)	particle_gravity_y(m/s2)	particle_gravity_z(m/s2)	den_ratio	specific_heat_ratio	particle_radius_2(lb)
+-9.81				0.0					0.0			1.164241164		1.0			7.5
+#offset_x   offset_y   offset_z;
+25.0		0.1	0.0
+#num_strip   cir_factor
+10		3.0
+#particle_temperature   particle_heat_source
+1.0	0.0
+
+##############################################
+c	Particle collision parameters			
+#cij(lb) 	ep(lb)	Ep(lb)	epw(lb)	Epw(lb)	th(lb)	thw(lb)	th_lub	thw_lub	r_buffer(lb)	r_cutoff(lb)
+0.22905		0.1	0.01	0.1	0.01	2.0	2.0	1.0	1.0		27	18 	

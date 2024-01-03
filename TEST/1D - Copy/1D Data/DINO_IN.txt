@@ -1,0 +1,358 @@
+&NML_DECOMPOSITION
+    IP_ROW=0,
+    IP_COL=0, 
+/
+&NML_INITIALIZE
+    INIT_TYPE=3,
+    USE_COMPACT=.FALSE.,
+    USE_EXPLICIT_FILTER=.true.,
+    EXPLICIT_FILTER_ORDER=8,
+    INIT_PRESSURE=101325.D0,
+    INIT_TEMPERATURE=300.D0,
+    INIT_TEMP_OXID=300,
+    INIT_TEMP_FUEL=300,
+    RANDOMSEEDS=.true.,
+    jet_flow_dir=1,
+    INIT_XVEL=0.D0,
+    INIT_YVEL=0.D0,
+    INIT_ZVEL=0.D0,
+    INIT_VEL_JET=0.0D0,
+    INIT_VEL_COFLOW=.0D0,
+    INIT_VEL_START=0,
+    RADIUS=1.d-3,
+    STIFF=5.D3,
+    STRAIN_RATE=0.D0,
+    INIT_TEMP_JUMP=0.D3,
+    INIT_VEL_JUMP=0.D0,
+    CONST_RHO = 0.379418D0,
+    CONST_MU  = 3.23673D-5,
+    GAS_PHASE(1)='nh3_sd',
+    GAS_PHASE(2)='H2:1.0, O2:0.5, N2:1.88',
+    GAS_PHASE(3)='',
+    EQUI_RATIO=0.0,
+    SPECIES_FUEL(1)='H2',
+    SPECIES_FUEL(2)='NH3',
+    SPECIES_PROD(1)='H2O',
+    SPECIES_PROD(2)='N2',
+    SPECIES_INERT(1)='Ar'
+/
+&NML_SCALARS
+    NSCAL = 0,
+    NAMES(1) = 'MixFrac',
+    IS_REACTIVE(1) = .false.
+/
+!-----------------------------------------
+! integration_scheme: 
+!                    explicit_rk4=1           : RK4 explicit, old and classical one
+!                    implicit_rk_williamson=2 : RK3 implicit with pyjac or numerical jacobina solver
+!                    explicit_rk_williamson=3 : RK3 explicit
+!                    explicit_rk_ssp=4        : RK3 explicit, less stable
+!                    implicit_rk3=5           : implicit RK3 similar to method number 2 but not well coded  
+!                    explicit_rk_carpkenn=6   : RK4 - low storage , less table
+!                    additive_implicit_rk4=7  : implicit RK4 with RADAU
+!-------------------------------------------
+&NML_TIME_INTEGRATION
+    INTEGRATION_SCHEME=1,
+    RK_TIME_STEP_CONTROL=.false.,
+    RK_DT_CONTROL_ACCURACY=0.8D-3,
+    RK_DT_CONTROL_INTERVAL=200,
+/
+&NML_CONTROL
+    INIT_TIMESTEP=1.D-8,
+    TSTEP_MIN=1.0D-12,
+    TSTEP_MAX=1.D-6,
+    TIME_END=1.44D0,
+    ITE_END=10000000,
+    TIME_STEP_CTRL_START=0,
+    CFL_LIM=0.35D0,
+    CFL_CTRL=.true.,
+    FOU_LIM=0.15D0,
+    FOU_CTRL=.true.,
+    DEBUG_GLOBAL=.false.,
+    DEBUG_LOCAL=.false.,
+    DEBUG_END_ITE=20
+/
+&NML_DIMENSIONS
+    LENGTH_X=0.006d0,
+    LENGTH_Y=0.001d0,
+    LENGTH_Z=0.0015d0,
+    DIMX_TOTAL=513,
+    DIMY_TOTAL=1,
+    DIMZ_TOTAL=1,
+/
+#-------------------------------------------------------------------------
+#   Boundary conditions 
+#-----------------------
+#artificial            =0
+#subsonic_inlet        =1
+#subsonic_outlet       =2 !> the outlet pressure equal atmosphere pressure
+#periodic              =3
+#symmetry              =4
+#adiabatic_wall        =5
+#isothermal_wall       =6
+#moving_wall           =7
+#outlet_flow           =8 !> the normal derivative of pressure equal zero
+#-------------------------------------------------------------------------
+&NML_BOUNDARY
+    BC_LEFT=6,
+    BC_RIGHT=2,
+    BC_UP=3,
+    BC_DOWN=3,
+    BC_FRONT=3,
+    BC_BACK=3,
+    BC_VEL_INLET=.false.,
+    U_IN_CTRL=.false.,
+    P_INFTY=101325.0D0,
+    BC_CLOSED_DOMAIN=.false.
+/
+#-------------------------------------------------------------------------
+#   COMPLEX GEOMERTY IMMERSED BOUNDARY METHOD
+#-------------------------------------------
+# IB_GEOMETRY : LOGICAL, ACTIVATES THE IBM TECHNIQUE FOR COMPLEX GEOMETRY
+# IB_DATA     : data file
+# IB_DATA_TYPE: data type, 0 for eulerian data, and 1 for lagrangian data
+# PROJECTION_POINTS: INTERPOLATION ORDER
+# IB_FLOW     : FLOW TYPE,  INTERNAL_FLOW OR EXTERNAL FLOW 
+#-------------------------------------------------------------------------
+&NML_IMMERSED_BOUNDARY
+    IB_GEOMETRY=.false.
+    IB_GHOST=.false.
+    READ_SDF=.false.
+    USE_3RD_IB=.false.
+    IB_XVEL = 0.d0
+    IB_YVEL = 0.d0
+    IB_ZVEL = 0.d0
+    IB_WVEL = 0.d0
+    IB_DATA='circular_cylinder.dat',
+    IB_DATA_TYPE=0, 
+    PROJECTION_POINTS=1,
+    IB_FLOW='external_flow',
+    PIS_VEL = 41800
+    IC_COMPRESS = .false.
+    IC_REACTION = .false.
+    DINO_TIME_REACTION = 0.D0
+    THERMO_PRESSURE_REACTION = 1.D0
+    ISOTHERMAL_IBM = .true.
+    ADIABATIC_IBM = .false.
+/
+&NML_POISSON_SOLVER
+    PRESSURE_SPECTRAL_SOLVER=.true.,
+    INCOMPRESSIBLE=.false.,
+    PGRADX=.false.,  
+    PGRADY=.false., 
+    PGRADZ=.false., 
+    SUPPRESS_NOISE_X=.FALSE.,
+    SUPPRESS_NOISE_Y=.FALSE.,
+    SUPPRESS_NOISE_Z=.FALSE.,
+    REMOVE_MEAN_PRESSURE=.false.
+/
+&NML_RESTART
+    RESTART=.true.,
+    RESTART_TAG='276000',
+    DINO_NEW_TIME_STEP=.true.,
+    READ_FROM_1D=.false., 
+    TWOD_FROM1D=.false.,
+    THREED_FROM1D=.false.,
+    THREED_FROM2D=.false.,
+    PATCH_SOLUTION = .FALSE.,
+    PATCH_ITERATION = 3000,
+    PATCH_SOL_FILE = ''
+/
+&NML_REACTION
+    REACTIVE=.true.,
+    REACTION_START_IT=1,
+    PHYSCHEM_LIB=1,
+    TEMPER_TH=0.D0,
+    USE_FPI=.FALSE.,
+    READ_BINARY=.false.,
+    FORCING=.true.,
+    Y_FORCING_TYPE=0,
+    ADD_SPARK = .false.,
+    SPARK_XCENTER = 0.0025d0,
+    SPARK_YCENTER = 0.00125d0,
+    SPARK_ZCENTER = 0.0025d0 
+    OMEGA = 1.2d-3
+    DELTASS = 1.d-3
+    DELTATT = 8.d-4
+    T_00 = 3.d-4
+    USE_ANN = .false. 
+/
+&NML_FPI
+
+/
+&NML_POD
+    POD = .false.
+    NMODE_POD = 10,
+    SNAPSHOT_SIZE = 50,
+    INTERVAL_POD = 10,
+    ITE_START = 60010
+    SAVING_POD=.false.
+/
+&NML_TRANSPORT
+    MOLTRANS_LIB=1,
+    DIF_SORET=.FALSE.,
+    DIF_DUFOUR=.FALSE.,
+    DIF_MULTI=.false.,
+    DIF_ULEWIS=.false.,
+    VOL_VISC=.FALSE.,
+    EGLIB_MODEL_NUM=2,
+    EGLIB_SCALE_FACTOR=1.D0,
+    VISCOSITY_CTRL=.false.
+/
+&NML_GRAVITY
+    GRAVITY_X=0.D0,
+    GRAVITY_Y=0.D0,
+    GRAVITY_Z=0.D0
+/
+&NML_GRIDDING
+    XGRID_TYPE=1,
+    YGRID_TYPE=1,
+    ZGRID_TYPE=1,
+    TAU_STR_CENTER_X=2.d0,
+    TAU_STR_CENTER_Y=2.d0,
+    TAU_STR_CENTER_Z=2.d0,
+    REF_CENTER_X=5.d-3,
+    REF_CENTER_Y=6.1d-3,
+    REF_CENTER_Z=2.d0,
+    BETA_G_BOUND=1.2d0
+/
+&NML_PARAMETERS
+    CLOSED_DOMAIN=.false.
+/
+&NML_VORTEX
+    VORT_NUMB=0,
+    VORT_CENTX(1)=0.5D-2,
+    VORT_CENTX(2)=0.0D0,
+    VORT_CENTY(1)=0.5D-2,
+    VORT_CENTY(2)=0.0D0,
+    VORT_CENTZ(1)=0.D0,
+    VORT_CENTZ(2)=0.D0,
+    VORT_RAD(1)=0.2D-3,
+    VORT_RAD(2)=0.D0,
+    VORT_STRENGTH(1)=0.D0,
+    VORT_STRENGTH(2)=0.D0
+/
+!-----------------------------------------------------------------------------------
+!DESCRIPTION OF VARIABLES FOR TWO PAHSE FLOW:
+!--------------------------------------------
+!> 1-NSEEDS    = number of seeds, if it is zero, no discrete phase will be considered 
+!> 2-TYPE_SEEDS= 0  --> corresponding to tracer
+!>               1  --> point force solid particles 
+!                2  --> non-resolved droplets
+!                3  --> resolved sphere 
+!                4  --> resolved fixed object
+!                                           
+!> 3-TWOPHASE_INIT_TYPE= 0  ---> random distribusion
+!						 1  ---> particles  move up
+!						 2  ---> particles move down
+!						 3  ---> cluster sheet in the center
+!						 4  ---> cluster sheet move as jet
+!						 5  ---> temporally evolving jet of particles, randomlly distributed
+!						 6  ---> spherical cloud of droplets
+!						 7  ---> jet inlet spray (not coded yet) 
+!						 8  ---> two particles collide 
+!						 9  ---> one particle in the center
+!						 10  ---> fixed objective
+! FORCING_TYPE = 1 ---> no motion
+! 			     2 ---> for moving bodies
+! heptane density =684.d0
+!-----------------------------------------------------------------------------------
+&NML_TWOPHASE
+    NSEEDS=0,
+    TYPE_SEEDS=3,
+    TWOPHASE_INIT_TYPE=10, 
+    DENS_SEEDS=684.0D0,               
+    DIAM_SEEDS=0.025D0,
+    TCRITICAL =540.13, 
+    TBOILING  =371.53, 
+    LATENT_HEAT_MOL=31.8D3,
+    WD_OX=0.032D0, 
+    WD_FUEL=0.1D0,
+    CPLIQUID=2260.4D0, 
+    DETAIL_DROPLET_TRANSPORT_PRO=.true.,
+    DINO_DROPLET_MINIMUM_DIAM=1.D-6,
+    INIT_TEMPERATURE_SEEDS=300,
+    INIT_SEEDS_VELX=0.D0,
+    INIT_SEEDS_VELY=-0.01D0,
+    INIT_SEEDS_VELZ=0.D0,
+    COLLISION_STIFF=5.D3,
+    TWO_WAY_COUPLING=.true.,
+    TWO_WAY_START_IT=1,
+    MASS_TRANSFER=.true.,
+    SURFACEPOINT_MANUALLY=.false.,                        
+    NSURFPOINT=400,  
+    FORCING_TYPE=2,
+/
+
+!DESCRIPTION OF VARIABLES
+!IFFT_KE --> MOST ENERGETIC WAVENUMBER OF PASSOT-PUQUET SPECTRUM (TURBU_METHOD==1)
+
+&NML_TURBULENCE
+    INIT_TURBU=.false.,
+    TURBU_METHOD=1,
+    TURBU_FORCING=.false.,
+    SPECTRUM_ANALY_TYPE=1,
+    UPRIME=0.04d0,
+    EPS_KARMAN=0.7d-5,
+    IFFT_LE=1.5d-3,
+    IFFT_LD=2.d-4,
+    FTI=.FALSE.,
+    FTI_PLANE=1,
+    FTI_DOMAIN=1,
+    FTI_GENERATION=.FALSE.,
+    FTI_DIRECT=.FALSE.,
+    FTI_FILE='0',
+    FILT_FLUCT=.FALSE.,
+    FILT_WIDTH=4.D-3,
+    DELTA_T=1.D-9,
+    FOU_LIM_FLUCT=0.02,
+    N_ITERATION=10,
+    NMODE=1000,
+    LE=8.D-5
+/
+!DESCRIPTION OF VARIABLES
+
+SAVING_MPIIO --> USE MPI-IO FOR OUTPUT
+SAVING_HDF5 --> USE PARALLEL HDF5 FOR OUTPUT
+
+&NML_SAVING
+    SAVING_TYPE=1,
+    SAVING_RESTART_INTERVAL=2000,
+    SAVING_AVERAGE_INTERVAL=10000,
+    SAVING_CTRL_HDF5_INTERVAL=200,
+    SAVING_HDF5_START=0,
+    SAVING_CTRL_MAX_MIN_INTERVAL=10,
+    SAVING_HDF5=.true.,
+    SAVING_RHS=.false.,
+    SAVING_MPIIO=.true.,
+    SAVING_VORTICITY=.false.,
+    SAVING_QCRITERION=.false.,
+    SAVING_Z_BILGER=.false.,
+    SAVING_FLAMEINDEX=.false.,
+    SAVING_DILATATION=.false.,
+    SAVING_ENTHALPY=.false.,
+    SAVING_PV=.false.,
+    SAVING_EDDY=.false.,
+    SAVING_VISCOSITY=.false.,
+    SAVING_TWOPHASE_VTK=.false.,
+    SAVING_AVERAGE=.FALSE.,
+    SAVING_PLANES=.FALSE.,
+    SAVING_PROBES=.FALSE.,
+    NPROBES_X=3,
+    NPROBES_Y=3,
+    NPROBES_Z=1,
+    SAVING_PLANE_AVERAGE= .false.,
+    SAVING_LEAST_SQUARE_FITS=.false., 
+    SAVE_HEAT_RELEASE=.true.,
+    SAVE_MASSFLOW=.FALSE.,
+    SAVE_TURBU_PROPS = .false.
+    SAVE_ENERGY_SPEC = .false.,
+    SAVE_DIFF_DIFF_PARAM = .FALSE.,
+    SAVE_RESIDUAL=.FALSE.,
+    SAVE_STATISTICS=.false,
+    SAVE_BURNING_RATE=.false.,
+/
+&NML_VALIDATION_ERROR
+    VALIDATION_ERROR =.false. 
+    BENCHMARK=2
+/
